@@ -48,6 +48,7 @@ export default function OnboardingPage() {
         await supabase.from('timetables').delete().eq('user_id', user.id);
 
         const formattedEntries = timetableEntries.map((e) => ({
+          id: e.id || crypto.randomUUID(),
           user_id: user.id,
           day_of_week: e.day_of_week,
           period_label: e.period_label || 'Period',
