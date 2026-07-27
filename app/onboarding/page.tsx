@@ -10,13 +10,13 @@ import { Check, ArrowRight, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function OnboardingPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [timetableEntries, setTimetableEntries] = useState<Partial<TimetableEntry>[]>([]);
+  const [timetableEntries, setTimetableEntries] = useState<TimetableEntry[]>([]);
   const [threshold, setThreshold] = useState<number>(75);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
-  const handleSaveTimetable = (entries: Partial<TimetableEntry>[]) => {
+  const handleSaveTimetable = (entries: TimetableEntry[]) => {
     setTimetableEntries(entries);
     setStep(2); // Move to Threshold step
   };

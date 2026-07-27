@@ -42,7 +42,7 @@ export default function SettingsPage() {
     loadData();
   }, []);
 
-  const handleSaveTimetable = async (entries: Partial<TimetableEntry>[]) => {
+  const handleSaveTimetable = async (entries: TimetableEntry[]) => {
     setSavingTT(true);
     try {
       const {

@@ -6,7 +6,7 @@ import { Plus, Trash2, Copy, Check, Palette } from 'lucide-react';
 
 interface TimetableBuilderProps {
   initialEntries?: TimetableEntry[];
-  onSave?: (entries: Partial<TimetableEntry>[]) => void;
+  onSave?: (entries: TimetableEntry[]) => void;
   saving?: boolean;
 }
 
@@ -36,7 +36,7 @@ export function TimetableBuilder({
   saving = false,
 }: TimetableBuilderProps) {
   const [activeDay, setActiveDay] = useState<DayOfWeek>(1); // Default Monday
-  const [entries, setEntries] = useState<Partial<TimetableEntry>[]>(initialEntries);
+  const [entries, setEntries] = useState<TimetableEntry[]>(initialEntries);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [selectedTargetDays, setSelectedTargetDays] = useState<DayOfWeek[]>([]);
   const [copiedSuccess, setCopiedSuccess] = useState(false);
@@ -53,12 +53,20 @@ export function TimetableBuilder({
     .filter((e) => e.day_of_week === activeDay)
     .sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
 
+  const generateId = (): string => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return `temp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  };
+
   const handleAddClass = (e: React.FormEvent) => {
     e.preventDefault();
     if (!subjectName.trim()) return;
 
-    const newEntry: Partial<TimetableEntry> = {
-      id: `temp_${Date.now()}`,
+    const newEntry: TimetableEntry = {
+      id: generateId(),
+      user_id: '',
       day_of_week: activeDay,
       period_label: periodLabel.trim() || `Period ${activeDayEntries.length + 1}`,
       subject_name: subjectName.trim(),
@@ -89,7 +97,7 @@ export function TimetableBuilder({
       for (const item of currentDayItems) {
         updatedEntries.push({
           ...item,
-          id: `temp_${Date.now()}_${Math.random()}`,
+          id: generateId(),
           day_of_week: targetDay,
         });
       }
